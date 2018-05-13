@@ -10,6 +10,7 @@ import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 import com.wanli.swing.frame.updateQuestion.UpdateChoiceComposite;
 import com.wanli.swing.frame.updateQuestion.UpdateFillInTheBlanksComposite;
@@ -73,7 +74,7 @@ class UpdateShell extends Dialog {
 		shell = new Shell(getParent(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL | SWT.RESIZE);
         shell.setText("Œ Ã‚–ﬁ∏ƒ");
         shell.setSize(800, 800);
-        
+        shell.setImage(SWTResourceManager.getImage("image/Update.png"));
         shell.addShellListener(new ShellAdapter() {
         	@Override
         	public void shellClosed(ShellEvent e) {

@@ -68,4 +68,13 @@ public class DBService {
 	public List<String> getStatisticalData(String tableName) {
 		return dbDao.getStatisticalData(tableName); 
 	}
+	
+	/**
+	 * 查询所有题目的类型
+	 * @param tableName
+	 * @return
+	 */
+	public List<String> getAllQuestionType(String tableName) {
+		return dbDao.getAllQuestionType(tableName);
+	}
 }

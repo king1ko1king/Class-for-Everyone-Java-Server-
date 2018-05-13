@@ -29,9 +29,9 @@ public class ListeningSocket implements Runnable  {
 					// 在显示列表中添加一个显示刚连上的客户端信息
 					Display.getDefault().syncExec(new Runnable(){
 						public void run() {
-							TreeItem treeItem = new TreeItem(StaticVariable.rooms.get(0), SWT.NONE);
-							treeItem.setText(ServerThread.getIpAddress());
-							StaticVariable.onlineUsers.put(ServerThread.getIpAddress(), treeItem);
+//							TreeItem treeItem = new TreeItem(StaticVariable.rooms.get(0), SWT.NONE);
+//							treeItem.setText(ServerThread.getUserName());
+//							StaticVariable.onlineUsers.put(ServerThread.getIpAddress(), treeItem);
 							StaticVariable.onlining.setText(StaticVariable.onlineNumsStr + StaticVariable.onlineNumsInt);
 						}
 						
@@ -59,11 +59,11 @@ public class ListeningSocket implements Runnable  {
 				});
 			}
 			
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+//			try {
+//				Thread.sleep(1000);
+//			} catch (InterruptedException e) {
+//				e.printStackTrace();
+//			}
 		}
 		
 	}

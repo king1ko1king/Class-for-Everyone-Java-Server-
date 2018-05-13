@@ -19,8 +19,6 @@
 		<filter-class>org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter</filter-class>
 	</filter>
 	
-	
-	
 	<filter-mapping>
 		<filter-name>Struts2</filter-name>
 		<url-pattern>/*</url-pattern>

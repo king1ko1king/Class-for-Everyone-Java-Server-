@@ -1,29 +1,35 @@
 package com.wanli.swing.frame;
 
+import java.util.List;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
 
+import com.wanli.swing.service.DBServiceUser;
 import com.wanli.utils.StaticVariable;
 
-public class CreateClassShell extends Dialog {
+public class SelectClassShell extends Dialog {
 	protected Object result;
 	protected Shell shell;
-	public CreateClassShell(Shell shell) {
-		super(shell);	
+	private DBServiceUser dbService;
+	public SelectClassShell(Shell shell) {
+		super(shell);
+		dbService = new DBServiceUser();
 	}
 	
 	public Object open() {
@@ -41,8 +47,8 @@ public class CreateClassShell extends Dialog {
 	protected void createContents() {
 		// 创建一个窗口
 		shell = new Shell(getParent(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
-        shell.setText("创建教室");
-        shell.setSize(400, 150);
+        shell.setText("选择班级");
+        shell.setSize(400, 250);
         // 使窗口居中显示
         center(shell.getDisplay(), shell);
         // 定义一个网格布局
@@ -62,22 +68,43 @@ public class CreateClassShell extends Dialog {
 	
 	protected void createClass(Composite parent) {
 		Label className = new Label(parent, SWT.NONE);
-		className.setText("教室名称：");
-		Text inputName = new Text(parent, SWT.BORDER);
+		className.setText("选择班级或专业：");
+		Combo selectClass = new Combo(parent, SWT.BORDER);
 		GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
-		inputName.setLayoutData(gridData);
+		selectClass.setLayoutData(gridData);
+		selectClass.add("请选择");
+		selectClass.select(0);
+		List<String> allClass = dbService.getAllClass();
+		if (allClass.size() > 0) {
+			for (int i = 0; i < allClass.size(); i++) {
+				selectClass.add(allClass.get(i));
+			}
+		}
+		Label tipLabel = new Label(parent, SWT.NONE);
+		tipLabel.setText("提示:");
+		tipLabel.setFont(new Font(parent.getDisplay(), "微软雅黑", 12, SWT.BOLD));
+		Label tipTextLabel = new Label(parent, SWT.NONE);
+		tipTextLabel.setText("选择一个班级或专业，若没有则自行输入！");
+		// 设置questionText为充满式布局，且水平占两列
+		GridData tipGrid = new GridData(GridData.FILL_BOTH);
+		tipGrid.horizontalSpan = 2;
+		tipTextLabel.setLayoutData(tipGrid);
 		Button confirm = new Button(parent, SWT.NONE);
 		confirm.setText(" 确      认 ");
 		confirm.addSelectionListener(new SelectionListener() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				// 没有输入教室名则弹出提示框
-				if (inputName.getText().trim() == "") {
+				if (selectClass.getText().trim().equals("请选择") || selectClass.getText().trim() == "") {
 					MessageBox messageBox = new MessageBox(parent.getShell());
-					messageBox.setMessage("请输入教室名称");
+					messageBox.setMessage("请选择班级或者专业");
 					messageBox.open();
 				} else {
-					StaticVariable.className = inputName.getText();
+					StaticVariable.classOrSepcialtyName = selectClass.getText();
+					String[] allclass = selectClass.getItems();
+					if (!allClass.contains(StaticVariable.classOrSepcialtyName)) {
+						dbService.addClass(StaticVariable.classOrSepcialtyName);
+					}
 					shell.dispose();
 				}
 			}
@@ -89,7 +116,7 @@ public class CreateClassShell extends Dialog {
 		});
 		// 设置窗口默认绑定的按钮为confirm按钮
 		shell.setDefaultButton(confirm);
-		inputName.addKeyListener(new KeyListener() {
+		selectClass.addKeyListener(new KeyListener() {
 			
 			@Override
 			public void keyReleased(KeyEvent keyEvent) {
@@ -112,7 +139,7 @@ public class CreateClassShell extends Dialog {
 			
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				StaticVariable.className = "";
+				StaticVariable.classOrSepcialtyName = "";
 				shell.dispose();
 			}
 			

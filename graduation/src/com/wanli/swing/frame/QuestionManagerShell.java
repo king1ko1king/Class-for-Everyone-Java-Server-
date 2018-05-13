@@ -22,6 +22,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 import com.wanli.swing.frame.listener.DeleteQuestionListener;
 import com.wanli.swing.frame.listener.OpenFileDialogBtnListener;
 import com.wanli.swing.frame.listener.UpdateQuestionListener;
+import com.wanli.swing.frame.updateQuestion.listener.QuestionUpdateRefreshBtnListener;
 import com.wanli.utils.StaticVariable;
 
 public class QuestionManagerShell {
@@ -89,7 +90,7 @@ class ManagerShell extends Dialog {
         // 使窗口居中显示
         center(shell.getDisplay(), shell);
         // 定义一个网格布局
-        GridLayout gridLayout = new GridLayout(1, false);
+        GridLayout gridLayout = new GridLayout(2, false);
         // 设置窗口布局
         shell.setLayout(gridLayout);
         createClass(shell);
@@ -99,9 +100,15 @@ class ManagerShell extends Dialog {
 		Button openFile = new Button(parent, SWT.NONE);
 		openFile.setText("打开文件");
 		openFile.addSelectionListener(new OpenFileDialogBtnListener());
+		Button refresh = new Button(parent, SWT.NONE);
+		refresh.setText("刷新");
+		refresh.addSelectionListener(new QuestionUpdateRefreshBtnListener());
 		TableViewer tableViewer = new TableViewer(parent, SWT.FULL_SELECTION);
 		StaticVariable.table = tableViewer.getTable();
 		StaticVariable.table.setLayoutData(new GridData(GridData.FILL_BOTH));
+		GridData gridTab = new GridData(GridData.FILL_BOTH);
+		gridTab.horizontalSpan = 2;
+		StaticVariable.table.setLayoutData(gridTab);
 		// 定义表中的列
 		TableColumn noColumn = new TableColumn(StaticVariable.table, SWT.LEFT);
 		noColumn.setText("编    号");
@@ -112,7 +119,7 @@ class ManagerShell extends Dialog {
 		TableColumn operColumn = new TableColumn(StaticVariable.table, SWT.LEFT);
 		operColumn.setText("操    作");
 		operColumn.setWidth((int)(parent.getSize().x * OPERCLOUMN_WIDTH_PROPORTION));
-		if (StaticVariable.tableName != null && StaticVariable.tableName != "") {
+		if (StaticVariable.tableName != null && StaticVariable.tableName.toString() != "") {
 			// 填充表格
 //			fillTable();			
 		}

@@ -34,9 +34,11 @@ public class CreateXmlFileBtnListener implements SelectionListener {
 	private String create;								// 标记是否创建xml文件
 	private List<String> optionKeys = new ArrayList<>();// 存储StaticVariable.choiceAllText所有选项的key值
 	private Shell shell;
+	private boolean isAppend = false;
 	
-	public CreateXmlFileBtnListener(Shell shell) {
+	public CreateXmlFileBtnListener(Shell shell, boolean isAppend) {
 		this.shell = shell;
+		this.isAppend = isAppend;
 	}
 	
 	@Override
@@ -84,7 +86,13 @@ public class CreateXmlFileBtnListener implements SelectionListener {
 					StaticVariable.fillblanksList.clear();
 					StaticVariable.creQuesIndex = 0;
 					if (save) {
-						shell.dispose();				
+						shell.dispose();
+						if (isAppend) {
+							MessageBox messageBox = new MessageBox(StaticVariable.parent.getShell(), SWT.YES);
+							messageBox.setText("提示");
+							messageBox.setMessage("添加成功，请刷新表格！");
+							messageBox.open();
+						}
 					}
 				} else {
 					MessageBox messageBox = new MessageBox(shell, SWT.YES);
@@ -103,25 +111,39 @@ public class CreateXmlFileBtnListener implements SelectionListener {
      */
     private boolean saveXmlFile(String str) {
     	boolean save = false;
-    	// 保存文件对话框
-    	FileDialog dialog = new FileDialog(StaticVariable.parent.getShell(), SWT.SAVE);
-    	dialog.setText("保存");
-    	// 设置对话框保存的限定类型,保存成xml文件
-    	dialog.setFilterExtensions(new String[] {"*.xml"});
-    	// 打开对话框，并返回保存文件的路径
-    	String saveFile = dialog.open();
-    	if (saveFile != null && saveFile != "") {
+    	if (!isAppend) {
+    		// 保存文件对话框
+    		FileDialog dialog = new FileDialog(StaticVariable.parent.getShell(), SWT.SAVE);
+    		dialog.setText("保存");
+    		// 设置对话框保存的限定类型,保存成xml文件
+    		dialog.setFilterExtensions(new String[] {"*.xml"});
+    		// 打开对话框，并返回保存文件的路径
+    		String saveFile = dialog.open();
+    		if (saveFile != null && saveFile != "") {
+    			save = true;
+    			File file = new File(saveFile);
+    			try {
+    				FileWriter writer = new FileWriter(file);
+    				StringBuffer fileString = new StringBuffer();
+    				fileString.append(str);
+    				writer.write(fileString.toString());
+    				writer.close();
+    			} catch (IOException e) {
+    				e.printStackTrace();
+    			}    		
+    		}
+    	} else {
     		save = true;
-    		File file = new File(saveFile);
-    		try {
-    			FileWriter writer = new FileWriter(file);
-    			StringBuffer fileString = new StringBuffer();
-    			fileString.append(str);
-    			writer.write(fileString.toString());
-    			writer.close();
-    		} catch (IOException e) {
-    			e.printStackTrace();
-    		}    		
+    		File file = new File(StaticVariable.questionManagerFileName);
+			try {
+				FileWriter writer = new FileWriter(file);
+				StringBuffer fileString = new StringBuffer();
+				fileString.append(str);
+				writer.write(fileString.toString());
+				writer.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
     	}
     	return save;
     }

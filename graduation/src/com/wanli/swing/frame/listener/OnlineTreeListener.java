@@ -75,6 +75,35 @@ public class OnlineTreeListener extends MouseAdapter{
 		        tree.setMenu(menu);
 			} else if(selected.getParentItem() == null) {// 是根节点
 				menu = new Menu(tree);// 为节点建POP UP菜单
+				
+				MenuItem saveStudent = new MenuItem(menu, SWT.PUSH);
+				saveStudent.setText("将学生名单存库");
+				saveStudent.addSelectionListener(new SelectionListener() {
+					
+					@Override
+					public void widgetSelected(SelectionEvent arg0) {
+						
+					}
+					
+					@Override
+					public void widgetDefaultSelected(SelectionEvent arg0) {
+					}
+				});
+				
+				MenuItem callTheRoll = new MenuItem(menu, SWT.PUSH);
+				callTheRoll.setText("考勤");
+				callTheRoll.addSelectionListener(new SelectionListener() {
+					
+					@Override
+					public void widgetSelected(SelectionEvent arg0) {
+						
+					}
+					
+					@Override
+					public void widgetDefaultSelected(SelectionEvent arg0) {
+					}
+				});
+				
 				MenuItem sort = new MenuItem(menu, SWT.PUSH);
 				sort.setText("排序");
 				sort.addSelectionListener(new SelectionListener() {

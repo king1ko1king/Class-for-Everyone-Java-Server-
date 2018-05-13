@@ -41,6 +41,8 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
 
 import com.wanli.swing.frame.CreateClassShell;
+import com.wanli.swing.frame.SelectClassShell;
+import com.wanli.utils.StaticVariable;
 
 /**
  * 新建教室对话框
@@ -54,7 +56,10 @@ public class CreateClassListener extends SelectionAdapter {
 	public CreateClassListener(Composite parent) {
 		this.parent = parent;
 		// 执行窗口弹出
-		new CreateClassShell(parent.getShell()).open();
+		new SelectClassShell(parent.getShell()).open();
+		if (StaticVariable.classOrSepcialtyName != null && StaticVariable.classOrSepcialtyName != "") {
+			new CreateClassShell(parent.getShell()).open();
+		}
 	}
 	
 	@Override

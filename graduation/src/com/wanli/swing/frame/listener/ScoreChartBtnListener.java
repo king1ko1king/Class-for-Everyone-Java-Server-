@@ -32,7 +32,7 @@ public class ScoreChartBtnListener implements SelectionListener {
 			new MultipleAnswersChartTableUtil(parent.getShell()).open();
 		} else if (StaticVariable.correct.size() == 1) {
 			// 答案只有一个
-			new SingleAnswerChartTableUtil(parent.getShell(), StaticVariable.tableName).open();			
+			new SingleAnswerChartTableUtil(parent.getShell(), StaticVariable.tableName.toString()).open();			
 		} else {
 			// 还没有学生回答问题，无法查看统计图
 			MessageBox messageBox = new MessageBox(parent.getShell(), SWT.YES);

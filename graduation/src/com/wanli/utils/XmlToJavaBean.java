@@ -40,10 +40,19 @@ public class XmlToJavaBean {
 			Question q = (Question) unmarshaller.unmarshal(file);
 			// 获取所有的选择题
 			List<ChoiceQuestion> choiceQs = q.getChoiceList();
+			if (choiceQs != null) {
+				StaticVariable.choiceList = choiceQs;				
+			}
 			// 获取所有的是非题
 			List<TrueOrFalse> tofQs = q.getTrueOrFalseList();
+			if (tofQs != null) {
+				StaticVariable.trueOrFalseList = tofQs;				
+			}
 			// 获取所有的填空题
 			List<FillInTheBlanks> fbQs = q.getFillBlanksList();
+			if (fbQs != null) {
+				StaticVariable.fillblanksList = fbQs;				
+			}
 			// 遍历所有的选择题
 			// 选择题存储类型：编号,类型,问题,答案,选项A,选项B,.... 
 			if (choiceQs != null && choiceQs.size() > 0) {

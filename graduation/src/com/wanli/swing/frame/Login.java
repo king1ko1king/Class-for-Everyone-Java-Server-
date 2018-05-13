@@ -230,8 +230,9 @@ public class Login {
 				window.getUser().setName(comboUser.getText());
 				window.getUser().setPassword(textPassword.getText());
 				DBDaoUser dao = new DBDaoUser();
+				String nickName = dao.getUserByNameAndPassword(window.getUser().getName(), window.getUser().getPassword());
 				// 查找数据库确认该用户是否存在，存在则执行保存帐号操作和打开主界面
-				if (dao.getUserByNameAndPassword(window.getUser().getName(), window.getUser().getPassword())) {
+				if (nickName != null) {
 					// 清空保存上一次登录信息的文件，保存这次的登录信息
 					saveProp.clear();
 					// 判断保存密码复选框是否选中，选中则一起保存密码，否则只保存帐号

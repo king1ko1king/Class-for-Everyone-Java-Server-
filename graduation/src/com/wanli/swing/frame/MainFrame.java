@@ -565,7 +565,7 @@ public class MainFrame extends ApplicationWindow {
 					StaticVariable.answers.put("统计", countStr);
 				}
 				System.out.println(StaticVariable.correct.size());
-				dbService.addRecord(StaticVariable.tableName, StaticVariable.answers, index);
+				dbService.addRecord(StaticVariable.tableName.toString(), StaticVariable.answers, index);
 			}
 	        super.handleShellCloseEvent();  
 	    }
@@ -1179,60 +1179,38 @@ public class MainFrame extends ApplicationWindow {
 	 * @return
 	 */
 	boolean OpenTextFile() {
-		StaticVariable.index = 1;
-		// 定义对话框，类型为打开型
-		FileDialog dialog = new FileDialog(getShell(), SWT.OPEN);
-		// 设置对话框打开的限定类型
-		dialog.setFilterExtensions(new String[] { "*.xml"});
-		// 打开对话框，并返回打开文件的路径
-		String openFile = dialog.open();
-		if (openFile == null) {
+		if (StaticVariable.rooms.size() > 0) {
+			StaticVariable.tableName.setLength(0);
+			StaticVariable.index = 1;
+			// 定义对话框，类型为打开型
+			FileDialog dialog = new FileDialog(getShell(), SWT.OPEN);
+			// 设置对话框打开的限定类型
+			dialog.setFilterExtensions(new String[] { "*.xml"});
+			// 打开对话框，并返回打开文件的路径
+			String openFile = dialog.open();
+			if (openFile == null) {
+				return false;
+			}
+			// 打开指定的文件
+			file = new File(openFile);
+			new XmlToJavaBean(file);
+			shell.setText(APPNAME + "-" + file);
+			String fileName = file.getName();
+//			StaticVariable.tableName = StaticVariable.classOrSepcialtyName + fileName.substring(0, fileName.indexOf("."));
+			StaticVariable.tableName.append(StaticVariable.classOrSepcialtyName)
+									.append("_")
+									.append(fileName.substring(0, fileName.indexOf(".")));
+	//		dbService.createTable(StaticVariable.questionsMap.size(), StaticVariable.tableName);
+			dbService.createTable(StaticVariable.allQuestionList, StaticVariable.tableName.toString());
+//			System.out.println(StaticVariable.tableName);
+			return false;
+		} else {
+			MessageBox messageBox = new MessageBox(shell, SWT.YES);
+			messageBox.setText("警告");
+			messageBox.setMessage("还未创建教室，无法打开文件！！！");
+			messageBox.open();
 			return false;
 		}
-		// 打开指定的文件
-		file = new File(openFile);
-		new XmlToJavaBean(file);
-		shell.setText(APPNAME + "-" + file);
-		String fileName = file.getName();
-		StaticVariable.tableName = fileName.substring(0, fileName.indexOf("."));
-//		dbService.createTable(StaticVariable.questionsMap.size(), StaticVariable.tableName);
-		dbService.createTable(StaticVariable.allQuestionList, StaticVariable.tableName);
-//		try {
-//			
-//			// 读取文件
-//			FileReader fileReader = new FileReader(file);
-//			// 把字符流的字符读入缓冲区
-//			BufferedReader reader = new BufferedReader(fileReader);
-//			StringBuffer sb = new StringBuffer();
-//			String line = null;
-//			while ((line = reader.readLine()) != null) {
-//				// 通过 append() 方法实现将字符串添加到字符缓冲区。
-//				sb.append(line);
-//				sb.append("\r\n");
-//			}
-//			
-//			int num = StaticVariable.questions.length - 1;
-//			String fileName = file.getName();
-//			shell.setText(APPNAME + "-" + file);
-//			StaticVariable.tableName = fileName.substring(0, fileName.indexOf("."));
-//			dbService.createTable(num, StaticVariable.tableName);
-//			
-//			//有文件，启用按钮
-////			first.setEnabled(true);
-////			previous.setEnabled(true);
-////			next.setEnabled(true);
-////			last.setEnabled(true);
-//			if (reader != null) {
-//				reader.close();				
-//			}
-//			return true;
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-		return false;
 	}
 
 	/**
@@ -1338,7 +1316,8 @@ public class MainFrame extends ApplicationWindow {
 		if (StaticVariable.className != null && StaticVariable.className != "") {
 			TreeItem classroom = new TreeItem(tree, SWT.NONE);
 			classroom.setText(StaticVariable.className);
-			StaticVariable.rooms.add(classroom);
+			StaticVariable.rooms.put(StaticVariable.className, classroom);
+			StaticVariable.className = "";
 		}
 	}
 }

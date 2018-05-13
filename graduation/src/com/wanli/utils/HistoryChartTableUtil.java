@@ -32,15 +32,17 @@ public class HistoryChartTableUtil extends Dialog {
 //	private String answer;
 	private List<double[]> ySeries = new ArrayList<>();	// 存储所有回答的统计情况
 	private String[] cagetorySeries;					// 存储所有答案，用于显示
+	private String questionType;
 
 //	private static final String[] cagetorySeries = { "正确", "错误",
 //	            "未回答" };
 	
-	public HistoryChartTableUtil(Shell parent, int index) {
+	public HistoryChartTableUtil(Shell parent, int index, String questionType) {
 		super(parent, SWT.NONE);
 		if (StaticVariable.statisticalData.size() > 0) {
-			inti(StaticVariable.statisticalData.get(index));			
+			init(StaticVariable.statisticalData.get(index));			
 		}
+		this.questionType = questionType;
 	}
 	
 	public Object open() {
@@ -81,32 +83,25 @@ public class HistoryChartTableUtil extends Dialog {
         if (cagetorySeries != null) {
         	for (int i = 0; i < cagetorySeries.length; i++) {
         		IBarSeries barSeries = (IBarSeries) chart.getSeriesSet().createSeries(
-        				SeriesType.BAR, cagetorySeries[i]);
+        				SeriesType.BAR, "答案：" + cagetorySeries[i]);
         		
         		barSeries.setYSeries(ySeries.get(i));
+        		barSeries.setBarColor(Display.getDefault().getSystemColor(SWT.COLOR_GREEN - i));
         	}        	
         }
-//        // create bar series
-//        IBarSeries barSeries1 = (IBarSeries) chart.getSeriesSet().createSeries(
-//                SeriesType.BAR, "bar series 1");
-//        barSeries1.setBarColor(Display.getDefault().getSystemColor(
-//                SWT.COLOR_GREEN));
-//
-//        IBarSeries barSeries2 = (IBarSeries) chart.getSeriesSet().createSeries(
-//                SeriesType.BAR, "bar series 2");
-//        barSeries2.setYSeries(ySeries2);
 
         // adjust the axis range
         chart.getAxisSet().adjustRange();
 		return chart;
 	}
 	
-	protected void inti(String str) {
+	protected void init(String str) {
 		String[] strs;
+//		System.out.println(str);
 		// 字符串存储的格式：{答案1 答案2 答案3...,正确1  正确2 正确3...,错误1 错误2 错误3...,未回答1 未回答2 未回答3...}
 		// 将传过来的字符串使用“,”号分割
 		if (str != null && str != "") {
-			strs = str.split("#\\^");			
+			strs = str.split(",");			
 		} else {
 			return;
 		}

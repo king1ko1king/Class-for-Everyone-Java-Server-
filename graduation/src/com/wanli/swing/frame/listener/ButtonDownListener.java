@@ -62,8 +62,8 @@ public class ButtonDownListener extends SelectionAdapter {
 				}
 			}
 			if (StaticVariable.tableName != null) {
-				columnNum = dbService.getTableColumn(StaticVariable.tableName);
-				records = dbService.getScoreData(StaticVariable.tableName);
+				columnNum = dbService.getTableColumn(StaticVariable.tableName.toString());
+				records = dbService.getScoreData(StaticVariable.tableName.toString());
 				for (int i = 0; i < columnNum; i++) {
 					if (i == 0) {
 						TableColumn Column_name = new TableColumn(StaticVariable.scoreTab, SWT.NONE);

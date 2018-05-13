@@ -302,6 +302,35 @@ public class DBDao {
 //		}
 	}
 	
+	/**
+	 * 查询所有题目的类型
+	 * @param tableName
+	 * @return
+	 */
+	public List<String> getAllQuestionType(String tableName) {
+		List<String> allTypes = new ArrayList<>();
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		ResultSetMetaData metaData = null;
+		Connection connection = null;
+		String sql = "select * from " + tableName + " where username = 'type'";
+		connection = DbUtilsScoreTab.getConnection();
+		try {
+			preparedStatement = connection.prepareStatement(sql);
+			resultSet = preparedStatement.executeQuery();
+			metaData = resultSet.getMetaData();
+			while (resultSet.next()) {
+				for (int i = 1; i <= metaData.getColumnCount(); i++) {
+					allTypes.add(resultSet.getString(i));
+				}
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return allTypes;
+	}
+	
 	public static void main(String[] args) {
 		DBDao dao = new DBDao();
 //		dao.addRecord("11", "ttt");
@@ -325,8 +354,7 @@ public class DBDao {
 //		Map<String, String> s = new HashMap<>();
 //		s.put("wan1", "a b");
 //		s.put("wan2", "c");
-//		dao.addRecord("question", s, 5);
-		System.out.println(dao.getStatisticalData("question"));
+		System.out.println(dao.getAllQuestionType("物联网_question2"));;
 	}
 	
 }

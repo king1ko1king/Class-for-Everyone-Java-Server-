@@ -13,6 +13,7 @@ import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 import com.wanli.swing.frame.listener.CreateXmlFileBtnListener;
 import com.wanli.swing.frame.listener.QuestionTypeListener;
@@ -38,16 +39,32 @@ public class PrepareLessons {
 		StaticVariable.fillblanksList.clear();
 	}
 	
+	public PrepareLessons(Composite parent, String shellText, String addBtnText, boolean isAppend) {
+		this.parent = parent;
+		// 执行窗口弹出
+		new PrepareShell(parent.getShell(), shellText, addBtnText, isAppend).open();
+	}
+	
 }
 
 class PrepareShell extends Dialog {
 
 	protected Object result;
 	protected Shell shell;
+	private String shellText = "课前备题";
+	private String addBtnText = "创    建";
+	private boolean isAppend = false;
 //	private Composite questionCom;
 	
 	public PrepareShell(Shell shell) {
 		super(shell);
+	}
+	
+	public PrepareShell(Shell shell, String shellText, String addBtnText, boolean isAppend) {
+		super(shell);
+		this.shellText = shellText;
+		this.addBtnText = addBtnText;
+		this.isAppend = isAppend;
 	}
 	
 	public Object open() {
@@ -68,9 +85,9 @@ class PrepareShell extends Dialog {
 	protected void createContents() {
 		// 创建一个窗口
 		shell = new Shell(getParent(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL | SWT.RESIZE);
-        shell.setText("课前备题");
+        shell.setText(shellText);
         shell.setSize(800, 800);
-        
+        shell.setImage(SWTResourceManager.getImage("image/Prepare.png"));
         shell.addShellListener(new ShellAdapter() {
         	@Override
         	public void shellClosed(ShellEvent e) {
@@ -114,8 +131,8 @@ class PrepareShell extends Dialog {
 
 		// 创建Xml文件按钮
 		Button create = new Button(parent, SWT.NONE);
-		create.setText("创    建");
-		create.addSelectionListener(new CreateXmlFileBtnListener(shell));
+		create.setText(addBtnText);
+		create.addSelectionListener(new CreateXmlFileBtnListener(shell, isAppend));
 
 		// 设置下拉框控件和创建按钮的布局
 		GridData fill = new GridData(GridData.FILL_HORIZONTAL);

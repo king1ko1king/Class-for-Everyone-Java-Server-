@@ -54,8 +54,7 @@ public class AddToQuestionList {
 			options.add(StaticVariable.choiceAllText.get(key).getText());
 		}
 		// 将生成的一道选择题存入StaticVariable.choiceList
-		StaticVariable.choiceList
-				.add(new ChoiceQuestion(Integer.toString(StaticVariable.creQuesIndex), question, answer, options));
+		StaticVariable.choiceList.add(new ChoiceQuestion(Integer.toString(StaticVariable.creQuesIndex), question, answer, options));
 		// // 测试
 		// for (ChoiceQuestion cq: StaticVariable.choiceList) {
 		// System.out.println(cq);

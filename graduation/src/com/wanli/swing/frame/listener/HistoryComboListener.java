@@ -67,9 +67,10 @@ public class HistoryComboListener implements SelectionListener {
 					@Override
 					public void widgetSelected(SelectionEvent arg0) {
 						String column = Column_name.getText().substring(1);
-						StaticVariable.statisticalData = dbService.getStatisticalData(StaticVariable.historyCombo.getText());							
+						StaticVariable.statisticalData = dbService.getStatisticalData(StaticVariable.historyCombo.getText());
+						String questionType = dbService.getAllQuestionType(StaticVariable.historyCombo.getText()).get(Integer.parseInt(column));
 						// 弹出图表统计数据
-						new HistoryChartTableUtil(StaticVariable.parent.getShell(), Integer.parseInt(column)).open();
+						new HistoryChartTableUtil(StaticVariable.parent.getShell(), Integer.parseInt(column), questionType).open();
 					}
 					
 					@Override

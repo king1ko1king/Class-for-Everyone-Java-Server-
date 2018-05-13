@@ -40,6 +40,7 @@ public class MyServer implements Runnable {
 			Socket s = null;
 			try {
 				s = ss.accept();
+//				System.out.println();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -53,6 +54,8 @@ public class MyServer implements Runnable {
 			}
 			//每当客户端连接后启动一条ServerThread线程为该客户端服务
 			try {
+				StaticVariable.usersSocket.put(s.getInetAddress().toString().substring(1), s);
+System.out.println(s.getInetAddress().toString());
 				new Thread(new ServerThread(s)).start();
 			} catch (IOException e) {
 				e.printStackTrace();

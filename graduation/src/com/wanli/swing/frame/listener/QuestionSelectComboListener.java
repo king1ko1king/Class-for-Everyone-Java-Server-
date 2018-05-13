@@ -7,6 +7,7 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Font;
 
 import com.wanli.swing.service.DBService;
+import com.wanli.utils.ChoiceQuestionUtils;
 import com.wanli.utils.StaticVariable;
 
 /**
@@ -85,11 +86,12 @@ public class QuestionSelectComboListener implements SelectionListener {
 				int error = StaticVariable.error.get(0).intValue();
 				unResponse = StaticVariable.users.size() - correct - error;
 				StaticVariable.unResponse.set(0, new Integer(unResponse));
-				String countStr = Integer.toString(correct) + "," + Integer.toString(error) + "," + Integer.toString(unResponse);
+				String countStr = strs[2] + "," + Integer.toString(correct) + "," + Integer.toString(error) + "," + Integer.toString(unResponse);
 				StaticVariable.answers.put("统计", countStr);
 			}
 			System.out.println(StaticVariable.correct.size());
-			dbService.addRecord(StaticVariable.tableName, StaticVariable.answers, index);
+			System.out.println(StaticVariable.answers);
+			dbService.addRecord(StaticVariable.tableName.toString(), StaticVariable.answers, index);
 		}
 		// 获取当前选中列的下标
 		index = StaticVariable.questionSelect.getSelectionIndex();
@@ -101,11 +103,14 @@ public class QuestionSelectComboListener implements SelectionListener {
 			String type = selected.substring(selected.indexOf("-") + 1);
 			switch (type) {
 			case "选择题":
-				
 				// 每选择一题，重置计数的类
 				StaticVariable.correct.clear();
 				StaticVariable.error.clear();
 				StaticVariable.unResponse.clear();
+				// 初始化存储正确答案个数，错误答案个数，未回答个数的list
+				StaticVariable.correct.add(new Integer(0));
+				StaticVariable.error.add(new Integer(0));
+				StaticVariable.unResponse.add(new Integer(0));
 				// 清空StringBuffer
 				showQues.setLength(0);
 				// 获取题目
@@ -113,6 +118,9 @@ public class QuestionSelectComboListener implements SelectionListener {
 				question = StaticVariable.questionsList.get(index - 1);
 				// 分割题目
 				strs = question.split("#\\^");
+				ChoiceQuestionUtils questionUtils = new ChoiceQuestionUtils(strs.length - 3);
+				questionUtils.createMap();
+				StaticVariable.options = questionUtils.getOptions();
 				// 重组题目
 				showQues.append("选择题:\n\n");
 				showQues.append(strs[1]);
@@ -132,6 +140,10 @@ public class QuestionSelectComboListener implements SelectionListener {
 				StaticVariable.correct.clear();
 				StaticVariable.error.clear();
 				StaticVariable.unResponse.clear();
+				// 初始化存储正确答案个数，错误答案个数，未回答个数的list
+				StaticVariable.correct.add(new Integer(0));
+				StaticVariable.error.add(new Integer(0));
+				StaticVariable.unResponse.add(new Integer(0));
 				showQues.setLength(0);
 //				question = StaticVariable.questionsMap.get(Integer.toString(index));
 				question = StaticVariable.questionsList.get(index - 1);
@@ -146,10 +158,19 @@ public class QuestionSelectComboListener implements SelectionListener {
 				StaticVariable.correct.clear();
 				StaticVariable.error.clear();
 				StaticVariable.unResponse.clear();
-				showQues.setLength(0);
-//				question = StaticVariable.questionsMap.get(Integer.toString(index));
 				question = StaticVariable.questionsList.get(index - 1);
 				strs = question.split("#\\^");
+				if (strs != null) {
+					// 初始化存储正确答案个数，错误答案个数，未回答个数的list
+					for (int i = 2; i < strs.length; i++) {
+						StaticVariable.correct.add(new Integer(0));
+						StaticVariable.error.add(new Integer(0));
+						StaticVariable.unResponse.add(new Integer(0));					
+					}
+					
+				}
+				showQues.setLength(0);
+//				question = StaticVariable.questionsMap.get(Integer.toString(index));
 				showQues.append("填空题:\n\n");
 				showQues.append(strs[1]);
 				StaticVariable.text.setText(showQues.toString());

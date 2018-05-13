@@ -1,5 +1,7 @@
 package com.wanli.swing.service;
 
+import java.util.List;
+
 import com.wanli.swing.dao.DBDaoUser;
 
 /**
@@ -30,7 +32,7 @@ public class DBServiceUser {
 	 * @param password:密码
 	 * @return
 	 */
-	public boolean getUserByNameAndPassword(String name, String password) {
+	public String getUserByNameAndPassword(String name, String password) {
 		return daoUser.getUserByNameAndPassword(name, password);
 	}
 	
@@ -61,4 +63,19 @@ public class DBServiceUser {
 		return daoUser.getNicknameByPhoneOrEmail(username);
 	}
 	
+	/**
+	 * 获取所有的班级和专业信息
+	 * @return
+	 */
+	public List<String> getAllClass() {
+		return daoUser.getAllClass();
+	}
+	
+	/**
+	 * 增加班级或专业
+	 * @param className
+	 */
+	public void addClass(String className) {
+		daoUser.addClass(className);
+	}
 }

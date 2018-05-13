@@ -92,7 +92,8 @@
 		}
 		//3.打开链接, 传三个参数，第一个参数指定请求方式，第二个参数指定路径，第三个true表示异步方式
 		//添加new Date().getTime()是为了避免浏览器的缓存
-		xhr.open("GET","${pageContext.request.contextPath}/registUser_getSmsVeriCode.action?time="+new Date().getTime()+"&username="+username,true);
+		xhr.open("GET","${pageContext.request.contextPath}/registUser_getSmsVeriCode.action?time="
+				+new Date().getTime()+"&username="+username,true);
 		//4.发送
 		xhr.send(null);
 	}
@@ -147,7 +148,8 @@
 		}
 		//3.打开链接, 传三个参数，第一个参数指定请求方式，第二个参数指定路径，第三个true表示异步方式
 		//添加new Date().getTime()是为了避免浏览器的缓存
-		xhr.open("GET","${pageContext.request.contextPath}/registUser_findByEmail.action?time="+new Date().getTime()+"&email="+email,true);
+		xhr.open("GET","${pageContext.request.contextPath}/registUser_findByEmail.action?time="
+				+new Date().getTime()+"&email="+email,true);
 		//4.发送
 		xhr.send(null);
 	}
@@ -187,7 +189,8 @@
 			}
 			//3.打开链接, 传三个参数，第一个参数指定请求方式，第二个参数指定路径，第三个true表示异步方式
 			//添加new Date().getTime()是为了避免浏览器的缓存
-			xhr.open("GET","${pageContext.request.contextPath}/registUser_findByName.action?time="+new Date().getTime()+"&username="+username,true);
+			xhr.open("GET","${pageContext.request.contextPath}/registUser_findByName.action?time="
+					+new Date().getTime()+"&username="+username,true);
 			//4.发送
 			xhr.send(null);
 		}
@@ -214,7 +217,8 @@
 		}
 		//3.打开链接, 传三个参数，第一个参数指定请求方式，第二个参数指定路径，第三个true表示异步方式
 		//添加new Date().getTime()是为了避免浏览器的缓存
-		xhr.open("GET","${pageContext.request.contextPath}/registUser_findByNickname.action?time="+new Date().getTime()+"&nickname="+nickname,true);
+		xhr.open("GET","${pageContext.request.contextPath}/registUser_findByNickname.action?time="
+				+new Date().getTime()+"&nickname="+nickname,true);
 		//4.发送
 		xhr.send(null);
 	}
@@ -292,7 +296,7 @@
 					</tr>
 					<tr>
 						<td></td>
-						<td id="nicknameError">推荐使用“姓名+学号”</td>
+						<td id="nicknameError">推荐使用“姓名+教师手机号”</td>
 					</tr>
 				
 					<tr>

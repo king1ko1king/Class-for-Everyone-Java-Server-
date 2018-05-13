@@ -9,6 +9,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 import com.wanli.utils.StaticVariable;
 
@@ -57,6 +58,7 @@ public class MessagePOP_UP {
 		shell = new Shell(display, SWT.DIALOG_TRIM);
 		shell.setText("Ã·Œ ");
 		shell.setSize(200, 200);
+		shell.setImage(SWTResourceManager.getImage("image/question.png"));
 		display();
 		message(shell);
 		shell.setLayout(new FillLayout());

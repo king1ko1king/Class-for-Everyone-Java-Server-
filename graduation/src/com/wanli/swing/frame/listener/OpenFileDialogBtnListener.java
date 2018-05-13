@@ -13,14 +13,16 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.TableItem;
 
+import com.wanli.swing.frame.updateQuestion.listener.QuestionUpdateAddListener;
 import com.wanli.utils.StaticVariable;
 import com.wanli.utils.XmlToJavaBean;
 
 public class OpenFileDialogBtnListener implements SelectionListener {
 
 	private static TableItem[] items;								// 显示所有的题目
-	private static int BTNWIDTH = 90;								// 按钮显示的宽度
-	private static String openFile;								// 打开的文件名
+	private static int DEL_AND_UPDATE_BTNWIDTH = 90;				// 删除与修改按钮显示的宽度
+	private static int ADDQUESTION_BTNWIDTH = 180;					// 追加试题按钮显示的宽度
+	private static String openFile;									// 打开的文件名
 	private static List<Control> cons = new ArrayList<>();			// 存储所有表格中的控件
 	private static List<TableEditor> editors = new ArrayList<>();	// 存储所有的tableEditor
 	
@@ -38,6 +40,7 @@ public class OpenFileDialogBtnListener implements SelectionListener {
 		dialog.setFilterExtensions(new String[] { "*.xml"});
 		// 打开对话框，并返回打开文件的路径
 		openFile = dialog.open();
+		StaticVariable.questionManagerFileName = openFile;
 		if (openFile == null) {
 			return;
 		}
@@ -68,7 +71,7 @@ public class OpenFileDialogBtnListener implements SelectionListener {
 		StaticVariable.table.removeAll();
 //		StaticVariable.table.pack();
 		// 根据题目的个数初始化数组
-		items = new TableItem[StaticVariable.questionSelect.getItemCount() - 1];
+		items = new TableItem[StaticVariable.questionSelect.getItemCount()];
 		for (int i = 0; i < StaticVariable.questionSelect.getItemCount() - 1; i++) {
 			// 设置第一列的text
 			items[i] = new TableItem(StaticVariable.table, SWT.NONE);
@@ -88,8 +91,8 @@ public class OpenFileDialogBtnListener implements SelectionListener {
 			editorDel.horizontalAlignment = SWT.LEFT;
 			editorUp.horizontalAlignment = SWT.RIGHT;
 			// 设置按钮显示的宽度
-			editorDel.minimumWidth = BTNWIDTH;
-			editorUp.minimumWidth = BTNWIDTH;
+			editorDel.minimumWidth = DEL_AND_UPDATE_BTNWIDTH;
+			editorUp.minimumWidth = DEL_AND_UPDATE_BTNWIDTH;
 			// 定义两个按钮控件
 			Button buttonDel = new Button(StaticVariable.table, SWT.PUSH);
 			Button buttonUp = new Button(StaticVariable.table, SWT.PUSH);
@@ -106,6 +109,23 @@ public class OpenFileDialogBtnListener implements SelectionListener {
 			// 添加按钮控件
 			editorDel.setEditor(buttonDel, items[i], 2);
 			editorUp.setEditor(buttonUp, items[i], 2);
+			if (i == StaticVariable.questionSelect.getItemCount() - 2) {
+				items[i + 1] = new TableItem(StaticVariable.table, SWT.NONE);
+				TableEditor editorAdd = new TableEditor(StaticVariable.table);
+				editors.add(editorAdd);
+				editorAdd.horizontalAlignment = SWT.CENTER;
+				editorAdd.minimumWidth = ADDQUESTION_BTNWIDTH;
+				// 定义一个追加试题按钮
+				Button buttonAdd = new Button(StaticVariable.table, SWT.PUSH);
+				buttonAdd.setText("追加试题");
+				cons.add(buttonAdd);
+				// 设置按钮的高度，默认与行的高度一致
+				buttonAdd.computeSize(SWT.DEFAULT, StaticVariable.table.getItemHeight());
+				// 为按钮添加监听器
+				buttonAdd.addSelectionListener(new QuestionUpdateAddListener());
+				// 添加按钮控件
+				editorAdd.setEditor(buttonAdd, items[i + 1], 2);
+			}
 		}
 	}
 

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Dialog;
@@ -71,6 +72,7 @@ public class MultipleAnswersChartTableUtil extends Dialog {
                     SeriesType.BAR, cagetorySeries[i]);
         	
         	barSeries.setYSeries(ySeries.get(i));
+        	barSeries.setBarColor(Display.getDefault().getSystemColor(SWT.COLOR_GREEN - i));
         }
 //        // create bar series
 //        IBarSeries barSeries1 = (IBarSeries) chart.getSeriesSet().createSeries(
@@ -90,12 +92,10 @@ public class MultipleAnswersChartTableUtil extends Dialog {
 	protected void init() {
 		cagetorySeries = new String[StaticVariable.correct.size()];
 		List<List<Integer>> allList = new ArrayList<>();// 将所有统计的数量存储到一个list中，用于后面遍历
-		allList.add(StaticVariable.correct);
-		allList.add(StaticVariable.error);
-		allList.add(StaticVariable.unResponse);
 		// 根据答案的个数初始化ySeries
 		for (int i = 0; i < StaticVariable.correct.size(); i++) {
-			ySeries.add(new double[StaticVariable.correct.size()]);
+			// 这里new double[3]是因为横轴只有正确、错误、未回答三个
+			ySeries.add(new double[3]);
 		}
 		// 根据正确的数量和错误的数量计算出未回答的数量
 		for (int i = 0; i < StaticVariable.correct.size(); i++) {
@@ -104,11 +104,15 @@ public class MultipleAnswersChartTableUtil extends Dialog {
 			int error = StaticVariable.error.get(i).intValue();
 			unResponse = StaticVariable.users.size() - correct - error;
 			StaticVariable.unResponse.set(i, new Integer(unResponse));
-			System.out.println(StaticVariable.unResponse);
 		}
+		allList.add(StaticVariable.correct);
+		allList.add(StaticVariable.error);
+		allList.add(StaticVariable.unResponse);
+//		System.out.println("StaticVariable.unResponse:" + StaticVariable.unResponse);
+		System.out.println(allList);
 		// 填充ySeries
-		for (int i = 0; i < StaticVariable.correct.size(); i++) {
-			for (int j = 0; j < ySeries.get(i).length; j++) {
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < ySeries.size(); j++) {
 				ySeries.get(j)[i] = allList.get(i).get(j);									
 			}
 		}
@@ -118,7 +122,7 @@ public class MultipleAnswersChartTableUtil extends Dialog {
 //			String question = StaticVariable.questionsMap.get(Integer.toString(index));
 			String question = StaticVariable.questionsList.get(index - 1);
 			String[] strs = question.split("#\\^");
-			cagetorySeries[i] = strs[i + 3];
+			cagetorySeries[i] = strs[i + 2];
 		}
 	}
 }

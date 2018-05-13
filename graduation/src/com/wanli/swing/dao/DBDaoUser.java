@@ -4,10 +4,13 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.wanli.utils.DBUtilsUser;
+import com.wanli.utils.DbUtilsScoreTab;
 
 /**
  * 操作userbean这张表
@@ -28,8 +31,8 @@ public class DBDaoUser {
 		Connection connection = DBUtilsUser.getConnection();
 		try {
 			preparedStatement = connection.prepareStatement(sql);
-			for (int i = 0; i < userInfo.length; i++) {
-				preparedStatement.setString(i + 1, userInfo[i]);
+			for (int i = 0; i < userInfo.length - 2; i++) {
+				preparedStatement.setString(i + 1, userInfo[i + 1]);
 			}
 			int back = preparedStatement.executeUpdate();
 			if (back == 1) {
@@ -47,8 +50,8 @@ public class DBDaoUser {
 	 * @param password:密码
 	 * @return
 	 */
-	public boolean getUserByNameAndPassword(String name, String password) {
-		boolean is_get = false;
+	public String getUserByNameAndPassword(String name, String password) {
+		String nickName = null;
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
 		Pattern pattern = null;
@@ -60,15 +63,15 @@ public class DBDaoUser {
 		matcher = pattern.matcher(name);
 		if (matcher.matches()) {
 			System.out.println("手机格式正确");
-			sql = "select * from userbean where name = ? and password = ?";
+			sql = "select nickname from userbean where name = ? and password = ?";
 		} else {
 			pattern = Pattern.compile(regexEmail);
 			matcher = pattern.matcher(name);
 			if (matcher.matches()) {
 				System.out.println("邮箱格式正确");
-				sql = "select * from userbean where email = ? and password = ?";
+				sql = "select nickname from userbean where email = ? and password = ?";
 			} else {
-				return is_get;
+				return null;
 			}
 		}
 		Connection connection = DBUtilsUser.getConnection();
@@ -78,12 +81,12 @@ public class DBDaoUser {
 			statement.setString(2, password);
 			resultSet = statement.executeQuery();
 			if (resultSet.next()) {
-				is_get = true;
+				nickName = resultSet.getString(1);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return is_get;
+		return nickName;
 	}
 	
 	/**
@@ -171,13 +174,60 @@ public class DBDaoUser {
 		}
 		return null;
 	}
+	
+	/**
+	 * 查找所有的班级或者专业记录
+	 * @param tableName
+	 * @return
+	 */
+	public List<String> getAllClass() {
+		List<String> allClass = new ArrayList<>();
+		PreparedStatement preparedStatement = null;
+		Connection connection = null;
+		ResultSet resultSet = null;
+		String sql = "select * from class_or_specialty";
+		connection = DBUtilsUser.getConnection();
+		try {
+			preparedStatement = connection.prepareStatement(sql);
+			resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				allClass.add(resultSet.getString(2));
+			}
+		} catch (SQLException e) {
+			System.out.println("数据库连接失败！");
+			e.printStackTrace();
+		}
+		return allClass;
+	}
+	
+	/**
+	 * 增加班级或专业
+	 * @param className
+	 */
+	public void addClass(String className) {
+		PreparedStatement preparedStatement = null;
+		Connection connection = null;
+		String sql = "insert into class_or_specialty(name) values(?)";
+		connection = DBUtilsUser.getConnection();
+		try {
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, className);
+			preparedStatement.execute();
+		} catch (SQLException e) {
+			System.out.println("数据库连接失败！");
+			e.printStackTrace();
+		}
+		
+	}
+	
 	public static void main(String[] args) {
 		DBDaoUser daoUser = new DBDaoUser();
 //		String[] user = {"14433333333", "陈文豪3141904210", "123456", "RRT@qq.com"};
 //		daoUser.addUser(user);
 //		System.out.println(daoUser.getUserByNameAndPassword("124@qq.com", "123456"));;
 //		System.out.println(daoUser.getByUsername("17759083295"));
-		System.out.println(daoUser.getNicknameByPhoneOrEmail("13344444444"));
+//		System.out.println(daoUser.getNicknameByPhoneOrEmail("13344444444"));
+		System.out.println(daoUser.getUserByNameAndPassword("13344444444", "123456"));
 	}
 	
 }
